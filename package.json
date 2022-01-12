@@ -1,0 +1,37 @@
+{
+  "type": "module",
+  "version": "1.1.32",
+  "name": "tob-ui-core",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "description": "tob ui组件库核心逻辑库",
+  "scripts": {
+    "test": "jest",
+    "build": "unbuild",
+    "build:stub": "unbuild --stub",
+    "test:watch": "jest --watchAll",
+    "prepublish": "npm version patch"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "keywords": [
+    "core",
+    "vuejs",
+    "uniapp",
+    "tob-ui"
+  ],
+  "license": "MIT",
+  "author": "markthree",
+  "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "@types/jest": "^27.0.2",
+    "babel-jest": "^27.3.1",
+    "jest": "^27.3.1",
+    "unbuild": "^0.6.3"
+  }
+}
