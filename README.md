@@ -203,6 +203,8 @@ export default {
     通用的设计系统
     mixin 时设置默认，同时暴露 props 用于用户修改
 
+该功能需要引入 👉 [tob-less](https://tob-less.netlify.app/)
+
 <br />
 
 #### Color
