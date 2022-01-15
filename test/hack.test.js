@@ -601,4 +601,10 @@ describe('hack', () => {
 			})
 		})
 	})
+
+	test('扩展属性', () => {
+		expect($H({ name: 'foo' })).toEqual({
+			name: 'foo'
+		})
+	})
 })
