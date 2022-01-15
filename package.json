@@ -1,6 +1,6 @@
 {
   "type": "module",
-  "version": "1.1.33",
+  "version": "1.2.0",
   "name": "tob-ui-core",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -12,6 +12,12 @@
     "test:watch": "jest --watchAll",
     "prepublish": "npm version patch"
   },
+  "files": [
+    "dist",
+    "core",
+    "test",
+    "README.md"
+  ],
   "exports": {
     ".": {
       "require": "./dist/index.cjs",
