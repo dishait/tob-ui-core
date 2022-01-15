@@ -18,9 +18,10 @@ import {
 } from '../design/counter.js'
 
 const hasDefaultValueArray = [
+	'flex',
+	'size',
 	'color',
 	'shadow',
-	'flex',
 	'rounded'
 ]
 
