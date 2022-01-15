@@ -364,9 +364,7 @@ export default {
 import { ProvideEffects } from 'tob-ui-core'
 export default {
   mixins: [
-    ProvideEffects({
-      name: 'Foo',
-    }),
+    ProvideEffects('Foo'),
   ],
   methods: {
     handle() {
@@ -398,9 +396,7 @@ import { InjectEffects } from 'tob-ui-core'
 export default {
   // 必须以供给端相同的命名Foo为参数
   mixins: [
-    InjectEffects({
-      name: 'Foo',
-    }),
+    InjectEffects('Foo'),
   ],
   methods: {
     handle() {
@@ -437,9 +433,7 @@ export default {
 import { ProvideCounter } from 'tob-ui-core'
 export default {
   mixins: [
-    ProvideCounter({
-      name: 'Foo',
-    }),
+    ProvideCounter('Foo'),
   ],
   methods: {
     handle() {
@@ -457,9 +451,7 @@ import { InjectCounter } from 'tob-ui-core'
 export default {
   // 必须以供给端相同的命名Foo为参数
   mixins: [
-    InjectCounter({
-      name: 'Foo',
-    }),
+    InjectCounter('Foo'),
   ],
   methods: {
     handle() {

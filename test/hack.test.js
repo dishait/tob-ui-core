@@ -1,4 +1,24 @@
-import { $C, $M, $P } from '../core/index.js'
+import { $C, $M, $P, $DA, $DE, $H } from '../core/index.js'
+
+describe('data生成器', () => {
+	describe('边界检查', () => {
+		test('非法类型', () => {
+			expect(() => $DA('')).toThrow(
+				'data 生成器只支持接收函数类型与对象类型'
+			)
+		})
+	})
+
+	test('原生函数', () => {
+		const foo = () => ({ bar: 100 })
+		expect($DA(foo)().bar).toBe(100)
+	})
+
+	test('对象模式', () => {
+		const foo = { bar: 100 }
+		expect($DA(foo)().bar).toBe(100)
+	})
+})
 
 describe('props生成器', () => {
 	describe('边界检查', () => {
@@ -284,6 +304,301 @@ describe('methods', () => {
 
 			o.toggle('status', false)
 			expect(o.status).toBe(false)
+		})
+	})
+})
+
+describe('designs', () => {
+	test('边界检查', () => {
+		expect(() =>
+			$DE({
+				foo: { bar: 100 }
+			})
+		).toThrow('该design - foo 不存在')
+	})
+
+	describe('内置design开启', () => {
+		test('颜色', () => {
+			expect($DE({ color: true })[0].props).toEqual({
+				color: {
+					type: String,
+					default: ''
+				},
+				light: {
+					type: Boolean,
+					default: false
+				},
+				outline: {
+					type: Boolean,
+					default: false
+				}
+			})
+		})
+
+		test('阴影', () => {
+			expect($DE({ shadow: true })[0].props).toEqual({
+				shadow: {
+					type: String,
+					default: 'none'
+				}
+			})
+		})
+
+		test('圆角', () => {
+			expect($DE({ rounded: true })[0].props).toEqual({
+				rounded: {
+					type: String,
+					default: 'none'
+				}
+			})
+		})
+
+		test('flex', () => {
+			expect($DE({ flex: true })[0].props).toEqual({
+				justify: {
+					type: String,
+					default: 'start'
+				},
+				align: {
+					type: String,
+					default: 'stretch'
+				},
+				direction: {
+					type: String,
+					default: 'row'
+				}
+			})
+		})
+
+		test('size', () => {
+			expect($DE({ size: true })[0].props).toEqual({
+				size: {
+					type: String,
+					default: 'md'
+				}
+			})
+		})
+
+		test('vModel', () => {
+			expect($DE({ vModel: true })[0].props).toEqual({
+				value: {
+					type: Boolean,
+					default: true
+				},
+				modelValue: {
+					type: Boolean,
+					default: true
+				}
+			})
+		})
+
+		test('emits', () => {
+			expect(
+				$DE({
+					emits: ['click', 'close']
+				})[0].emits
+			).toEqual(['click', 'close'])
+		})
+
+		test('effects', () => {
+			expect(
+				$DE({ provideEffects: 'foo' })[0].provide.call({
+					hasEffect: 1
+				}).fooHasEffect
+			).toBe(1)
+			expect(
+				$DE({
+					injectEffects: 'foo'
+				})[0].inject.fooHasEffect.default()
+			).toBeUndefined()
+		})
+
+		test('counter', () => {
+			expect(
+				$DE({ provideCounter: 'foo' })[0]
+					.provide.call({
+						counter: 0
+					})
+					.fooUseCounter()
+			).toEqual(0)
+			expect(
+				$DE({
+					injectCounter: 'foo'
+				})[0].inject.fooUseCounter.default()
+			).toBeUndefined()
+		})
+	})
+
+	test('简化开启', () => {
+		const open = ['rounded', 'shadow', 'color']
+		expect($DE({ open })[0].props).toEqual({
+			rounded: {
+				type: String,
+				default: 'none'
+			}
+		})
+
+		expect($DE({ open })[1].props).toEqual({
+			shadow: {
+				type: String,
+				default: 'none'
+			}
+		})
+
+		expect($DE({ open })[2].props).toEqual({
+			color: {
+				type: String,
+				default: ''
+			},
+			light: {
+				type: Boolean,
+				default: false
+			},
+			outline: {
+				type: Boolean,
+				default: false
+			}
+		})
+	})
+
+	describe('格式化默认配置', () => {
+		expect(
+			$DE({ size: { default: 'lg' } })[0].props
+		).toEqual({ size: { type: String, default: 'lg' } })
+	})
+
+	test('默认嵌套配置', () => {
+		expect(
+			$DE({ color: { light: true } })[0].props
+		).toEqual({
+			color: {
+				type: String,
+				default: ''
+			},
+			light: {
+				type: Boolean,
+				default: true
+			},
+			outline: {
+				type: Boolean,
+				default: false
+			}
+		})
+	})
+
+	test('复杂预设配置', () => {
+		const config = {
+			size: {
+				default: 'lg',
+				presets: {
+					lg: 'text-lg'
+				}
+			}
+		}
+		expect(
+			$DE(config)[0].computed.Size.call({ size: 'lg' })
+		).toBe('text-lg')
+	})
+})
+
+describe('hack', () => {
+	test('data', () => {
+		const options = {
+			data: {
+				foo: 100
+			}
+		}
+
+		const { data: createData } = $H(options)
+		expect(createData()).toEqual({
+			foo: 100
+		})
+	})
+
+	test('props', () => {
+		const options = {
+			props: { name: 'zhangsan', age: 18 }
+		}
+
+		expect($H(options)).toEqual({
+			props: {
+				name: {
+					type: String,
+					default: 'zhangsan'
+				},
+				age: {
+					type: Number,
+					default: 18
+				}
+			}
+		})
+	})
+
+	test('computed', () => {
+		const options = {
+			computed: {
+				Name: 'I am $'
+			}
+		}
+
+		expect(
+			$H(options).computed.Name.call({ name: 'zhangsan' })
+		).toBe('I am zhangsan')
+	})
+
+	test('methods', () => {
+		const options = {
+			methods: {
+				toggle: true
+			}
+		}
+		const { methods } = $H(options)
+		const payload = { visible: false }
+		methods.toggle.call(payload, 'visible')
+		expect(payload.visible).toBe(true)
+
+		methods.toggle.call(payload, 'visible', false)
+		expect(payload.visible).toBe(false)
+	})
+
+	describe('designs', () => {
+		test('单一', () => {
+			const options = {
+				designs: {
+					shadow: true
+				}
+			}
+			expect($H(options).mixins[0].props).toEqual({
+				shadow: {
+					type: String,
+					default: 'none'
+				}
+			})
+		})
+
+		test('混合原生mixins', () => {
+			const options = {
+				designs: {
+					rounded: true
+				},
+				mixins: [
+					{
+						foo: 100
+					}
+				]
+			}
+			const { mixins } = $H(options)
+			const [rounded, origin] = mixins
+			expect(rounded.props).toEqual({
+				rounded: {
+					type: String,
+					default: 'none'
+				}
+			})
+
+			expect(origin).toEqual({
+				foo: 100
+			})
 		})
 	})
 })
