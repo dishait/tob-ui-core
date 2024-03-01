@@ -5,6 +5,11 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "description": "tob ui组件库核心逻辑库",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dishait/tob-ui-core.git"
+  },
+
   "scripts": {
     "test": "jest",
     "build": "unbuild",
@@ -31,7 +36,11 @@
     "tob-ui"
   ],
   "license": "MIT",
-  "author": "markthree",
+  "author": {
+    "name": "markthree",
+    "email": "1801982702@qq.com",
+    "url": "https://github.com/markthree"
+  },
   "devDependencies": {
     "@babel/core": "^7.16.0",
     "@babel/preset-env": "^7.16.0",
